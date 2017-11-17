@@ -20,6 +20,8 @@
                         <li class="pb-8 mb-8">
                             <span class="code-block">
                                 <pre><code>
+    use RefreshDatabase;
+
     /** @test */
     public function user_who_bought_ticket_should_be_in_attendees_page()
     {

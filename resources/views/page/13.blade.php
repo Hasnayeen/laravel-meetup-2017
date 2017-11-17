@@ -7,13 +7,23 @@
                     </h1>
                     <ul class="list-reset text-2xl text-blue mt-8 pt-8">
                         <li class="pb-8">
-                            1. Create a new test <span class="var">visitors_can_not_see_session_speaker_name</span>
+                            1. Create a new test class <span class="var">TicketsPageTest</span>
+                        </li>
+                        <li class="pb-8 mb-8">
+                            <span class="code-block">
+                                <pre><code>$ php artisan make:test TicketsPageTest</code></pre>
+                            </span>
+                        </li>
+                        <li class="pb-8">
+                            2. Create a new test <span class="var">users_should_see_purchase_form_in_tickets_page</span>
                         </li>
                         <li class="pb-8 mb-8">
                             <span class="code-block">
                                 <pre><code>
+    use RefreshDatabase;
+
     /** @test */
-    public function visitors_can_not_see_session_speaker_name()
+    public function users_should_see_purchase_form_in_tickets_page()
     {
 
     }
@@ -21,19 +31,17 @@
                             </span>
                         </li>
                         <li class="pb-8">
-                            2. So what are we trying to do
+                            3. So what are we trying to do
                         </li>
                         <li class="pb-8 mb-8">
                             <span class="code-block">
                                 <pre>
                                     <code>
-// Given we are not logged in
+// Given we are logged in
 
-// And there are sessions in schedule page
+// When we visits tickets page
 
-// When we visit the schedule page
-
-// Then we should not see the speaker name of session
+// Then we should see ticket purchase form
 </code>
                                 </pre>
                             </span>
@@ -44,21 +52,14 @@
                         <li class="pb-8 mb-8">
                             <span class="code-block">
                                 <pre><code>
-        $sessions = factory('App\Models\Session', 5)->create();
-        $response = $this->get('schedule');
-        $response->assertDontSee($sessions->first()->speaker);
-                                </code></pre>
-                            </span>
-                        </li>
-                        <li class="pb-8 mb-8">
-                            <span class="code-block">
-                                <pre><code>
-    public function setUp()
-    {
-        parent::setUp();
+        $response = $this->actingAs($this->user)
+                         ->get('tickets');
 
-        $this->sessions = factory('App\Models\Session', 5)->create();
-    }
+        $response->assertSee('email')
+                 ->assertSee('cc_number')
+                 ->assertSee('expiration_date')
+                 ->assertSee('cvv')
+                 ->assertSee('type="submit"');
                                 </code></pre>
                             </span>
                         </li>
@@ -67,54 +68,20 @@
                         </li>
                         <li class="pb-8 mb-8">
                             <span class="code-block">
-                                <pre><code>
-$factory->define(App\Models\Session::class, function (Faker $faker) {
-    return [
-        'title' => $faker->sentence,
-        'speaker' => $faker->name,
-        'time' => $faker->time,
-    ];
-});
-                                </code></pre>
+                                <pre><code>Route::get('tickets', 'TicketsController@show')->middleware('auth');</code></pre>
+                            </span>
+                        </li>
+                        <li class="pb-8 mb-8">
+                            <span class="code-block">
+                                <pre><code>$ php artisan make:controller TicketsController</code></pre>
                             </span>
                         </li>
                         <li class="pb-8 mb-8">
                             <span class="code-block">
                                 <pre><code>
-            $table->string('title');
-            $table->string('speaker');
-            $table->time('time');
-                                </code></pre>
-                            </span>
-                        </li>
-                        <li class="pb-8 mb-8">
-                            <span class="code-block">
-                                <pre><code>$ php artisan migrate</code></pre>
-                            </span>
-                        </li>
-                        <li class="pb-8 mb-8">
-                            <span class="code-block">
-                                <pre><code>        $response->assertStatus(200);</code></pre>
-                            </span>
-                        </li>
-                        <li class="pb-8 mb-8">
-                            <span class="code-block">
-                                <pre><code>Route::get('schedule', 'SessionsController@index');</code></pre>
-                            </span>
-                        </li>
-                        <li class="pb-8 mb-8">
-                            <span class="code-block">
-                                <pre><code>php artisan make:controller SessionsController</code></pre>
-                            </span>
-                        </li>
-                        <li class="pb-8 mb-8">
-                            <span class="code-block">
-                                <pre><code>
-    public function index()
+    public function show()
     {
-        $sessions = Session::all();
-
-        return view('schedule', compact("sessions"));
+        return view('tickets');
     }
                                 </code></pre>
                             </span>
@@ -122,13 +89,50 @@ $factory->define(App\Models\Session::class, function (Faker $faker) {
                         <li class="pb-8 mb-8">
                             <span class="code-block">
                                 <pre><code>@verbatim
-@if (Auth::check())
-&#x3C;span class=&#x22;text-grey pr-4 invisible&#x22;&#x3E;{{ $session-&#x3E;time }}&#x3C;/span&#x3E;
-&#x3C;a href=&#x22;#&#x22; class=&#x22;text-right no-underline text-blue-light text-base&#x22;&#x3E;
-    {{ $session-&#x3E;speaker }}
-&#x3C;/a&#x3E;
-@endif
-@endverbatim</code></pre>
+&#x3C;h1 class=&#x22;text-grey-darker text-center font-hairline tracking-wide text-7xl mb-6&#x22;&#x3E;
+    Tickets
+&#x3C;/h1&#x3E;
+
+&#x3C;div class=&#x22;w-full max-w-xs&#x22;&#x3E;
+  &#x3C;form class=&#x22;bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4&#x22; method=&#x22;POST&#x22; action=&#x22;{{ route(&#x27;purchase&#x27;) }}&#x22;&#x3E;
+    {{ csrf_field() }}
+
+    &#x3C;div class=&#x22;mb-4&#x22;&#x3E;
+      &#x3C;label class=&#x22;block text-grey-darker text-sm font-bold mb-2&#x22; for=&#x22;email&#x22;&#x3E;
+        Email
+      &#x3C;/label&#x3E;
+      &#x3C;input class=&#x22;shadow appearance-none border rounded w-full py-2 px-3 text-grey-darker&#x22; id=&#x22;email&#x22;
+      type=&#x22;text&#x22; placeholder=&#x22;john@example.com&#x22;&#x3E;
+    &#x3C;/div&#x3E;
+    &#x3C;div class=&#x22;mb-4&#x22;&#x3E;
+      &#x3C;label class=&#x22;block text-grey-darker text-sm font-bold mb-2&#x22; for=&#x22;cc_number&#x22;&#x3E;
+        Credit Card Number
+      &#x3C;/label&#x3E;
+      &#x3C;input class=&#x22;shadow appearance-none border rounded w-full py-2 px-3 text-grey-darker&#x22; id=&#x22;cc_number&#x22;
+      type=&#x22;text&#x22; placeholder=&#x22;6231-4506-2398-4582&#x22;&#x3E;
+    &#x3C;/div&#x3E;
+    &#x3C;div class=&#x22;mb-4&#x22;&#x3E;
+      &#x3C;label class=&#x22;block text-grey-darker text-sm font-bold mb-2&#x22; for=&#x22;expiration_date&#x22;&#x3E;
+        Expiration Date
+      &#x3C;/label&#x3E;
+      &#x3C;input class=&#x22;shadow appearance-none border rounded w-full py-2 px-3 text-grey-darker&#x22; id=&#x22;expiration_date&#x22;
+      type=&#x22;text&#x22; placeholder=&#x22;10/18&#x22;&#x3E;
+    &#x3C;/div&#x3E;
+    &#x3C;div class=&#x22;mb-6&#x22;&#x3E;
+      &#x3C;label class=&#x22;block text-grey-darker text-sm font-bold mb-2&#x22; for=&#x22;cvv&#x22;&#x3E;
+        CVV Number
+      &#x3C;/label&#x3E;
+      &#x3C;input class=&#x22;shadow appearance-none border rounded w-full py-2 px-3 text-grey-darker mb-3&#x22; id=&#x22;cvv&#x22;
+      type=&#x22;password&#x22; placeholder=&#x22;***&#x22;&#x3E;
+    &#x3C;/div&#x3E;
+    &#x3C;div class=&#x22;flex items-right justify-end&#x22;&#x3E;
+      &#x3C;button class=&#x22;bg-blue hover:bg-blue-dark text-white font-bold py-2 px-4 rounded&#x22; type=&#x22;submit&#x22;&#x3E;
+        Buy
+      &#x3C;/button&#x3E;
+    &#x3C;/div&#x3E;
+  &#x3C;/form&#x3E;
+&#x3C;/div&#x3E;
+                                @endverbatim</code></pre>
                             </span>
                         </li>
                     @include('page.pagination')
