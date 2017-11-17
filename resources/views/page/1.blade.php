@@ -19,9 +19,7 @@
         <div class="min-h-screen flex items-center justify-center">
             <div class="flex flex-col justify-around h-full">
                 <div>
-                    <h1 class="text-grey-darker text-center font-hairline tracking-wide text-7xl mb-6">
-                        Laravel Meetup 1.0
-                    </h1>
+                    <img src="/images/meetup-cover.svg" style="width: 100rem;">
                     @include('page.pagination')
                 </div>
             </div>

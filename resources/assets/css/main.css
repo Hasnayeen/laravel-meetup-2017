@@ -23,6 +23,14 @@
  * @import "components/forms";
  */
 
+.var {
+    @apply bg-pink-lighter rounded px-2 py-1;
+}
+
+.code-block {
+    @apply block p-4 bg-grey text-white;
+}
+
 /**
  * This injects all of Tailwind's utility classes, generated based on your
  * config file.

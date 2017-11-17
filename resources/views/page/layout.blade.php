@@ -16,14 +16,11 @@
 <body class="bg-brand-lightest font-sans font-normal">
     <div class="flex flex-col">
 
-        <div class="min-h-screen flex items-center justify-center">
+        <div class="min-h-screen flex items-start justify-center mt-8 pt-8">
             <div class="flex flex-col justify-around h-full">
-                <div>
-                    <h1 class="text-grey-darker text-center font-hairline tracking-wide text-7xl mb-8 pb-8">
-                        Don't Tell, Show
-                    </h1>
-                    @include('page.pagination')
-                </div>
+
+                @yield('content')
+
             </div>
         </div>
     </div>

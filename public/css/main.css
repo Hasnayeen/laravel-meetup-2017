@@ -504,6 +504,22 @@ button,
  * @import "components/forms";
  */
 
+.var {
+  background-color: #ffbbca;
+  border-radius: .25rem;
+  padding-left: 0.5rem;
+  padding-right: 0.5rem;
+  padding-top: 0.25rem;
+  padding-bottom: 0.25rem;
+}
+
+.code-block {
+  display: block;
+  padding: 1rem;
+  background-color: #9babb4;
+  color: #ffffff;
+}
+
 /**
  * This injects all of Tailwind's utility classes, generated based on your
  * config file.

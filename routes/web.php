@@ -13,5 +13,8 @@
 
 Auth::routes();
 
-Route::get('/home', 'HomeController@index')->name('home');
+Route::get('/', 'HomeController@index')->name('home');
 
+Route::get('schedule', 'SessionsController@index');
+
+Route::get('attendees', 'AttendeesController@index');
