@@ -11,14 +11,9 @@
 |
 */
 
+Route::get('/', function () {
+    return view('welcome');
+});
 Auth::routes();
 
-Route::get('/', 'HomeController@index')->name('home');
-
-Route::get('schedule', 'SessionsController@index');
-
-Route::get('attendees', 'AttendeesController@index')->middleware('auth');
-
-Route::get('tickets', 'TicketsController@show')->middleware('auth');
-
-Route::post('tickets', 'TicketsController@store')->name('purchase')->middleware('auth');
+Route::get('/home', 'HomeController@index')->name('home');

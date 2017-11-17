@@ -18,7 +18,6 @@ class CreateUsersTable extends Migration
             $table->string('name');
             $table->string('email')->unique();
             $table->string('password');
-            $table->dateTime('ticket_bought')->nullable();
             $table->rememberToken();
             $table->timestamps();
         });
