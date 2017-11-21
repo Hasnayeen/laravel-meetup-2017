@@ -1,31 +1,26 @@
-<!DOCTYPE html>
-<html lang="{{ app()->getLocale() }}">
-<head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+@extends('page.layout')
 
-    <!-- CSRF Token -->
-    <meta name="csrf-token" content="{{ csrf_token() }}">
-
-    <title>{{ config('app.name', 'Laravel') }}</title>
-
-    <!-- Styles -->
-    <link href="{{ asset('css/main.css') }}" rel="stylesheet">
-</head>
-<body class="bg-brand-lightest font-sans font-normal">
-    <div class="flex flex-col">
-
-        <div class="min-h-screen flex items-center justify-center">
-            <div class="flex flex-col justify-around h-full">
+@section('content')
                 <div>
-                    <h1 class="text-grey-darker text-center font-hairline tracking-wide text-7xl mb-8 pb-8">
-                        Don't Tell, Show
+                    <h1 class="text-grey-darker text-center font-hairline tracking-wide text-7xl mb-6">
+                        TDD Workflow
                     </h1>
+                    <ul class="list-reset text-2xl text-blue mt-8 pt-8">
+                        <li class="pb-8">
+                            1. First write the test
+                        </li>
+                        <li class="pb-8">
+                            2. Run and make test fail
+                        </li>
+                        <li class="pb-8">
+                            3. Write minimum code to make the test pass
+                        </li>
+                        <li class="pb-8">
+                            4. Refactor
+                        </li>
+                        <li class="pb-8">
+                            5. Repeat
+                        </li>
                     @include('page.pagination')
                 </div>
-            </div>
-        </div>
-    </div>
-</body>
-</html>
+@endsection

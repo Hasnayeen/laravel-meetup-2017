@@ -7,13 +7,23 @@
                     </h1>
                     <ul class="list-reset text-2xl text-blue mt-8 pt-8">
                         <li class="pb-8">
-                            1. Create a new test <span class="var">visitors_can_not_see_session_speaker_name</span>
+                            1. Create a new test class <span class="var">AttendeesPageTest</span>
+                        </li>
+                        <li class="pb-8 mb-8">
+                            <span class="code-block">
+                                <pre><code>$ php artisan make:test AttendeesPageTest</code></pre>
+                            </span>
+                        </li>
+                        <li class="pb-8">
+                            2. Create a new test <span class="var">user_who_bought_ticket_should_be_in_attendees_page</span>
                         </li>
                         <li class="pb-8 mb-8">
                             <span class="code-block">
                                 <pre><code>
+    use RefreshDatabase;
+
     /** @test */
-    public function visitors_can_not_see_session_speaker_name()
+    public function user_who_bought_ticket_should_be_in_attendees_page()
     {
 
     }
@@ -21,19 +31,17 @@
                             </span>
                         </li>
                         <li class="pb-8">
-                            2. So what are we trying to do
+                            3. So what are we trying to do
                         </li>
                         <li class="pb-8 mb-8">
                             <span class="code-block">
                                 <pre>
                                     <code>
-// Given we are not logged in
+// Given we bought tickets
 
-// And there are sessions in schedule page
+// When we visits attendees page
 
-// When we visit the schedule page
-
-// Then we should not see the speaker name of session
+// Then we should see our name
 </code>
                                 </pre>
                             </span>
@@ -44,21 +52,9 @@
                         <li class="pb-8 mb-8">
                             <span class="code-block">
                                 <pre><code>
-        $sessions = factory('App\Models\Session', 5)->create();
-        $response = $this->get('schedule');
-        $response->assertDontSee($sessions->first()->speaker);
-                                </code></pre>
-                            </span>
-                        </li>
-                        <li class="pb-8 mb-8">
-                            <span class="code-block">
-                                <pre><code>
-    public function setUp()
-    {
-        parent::setUp();
-
-        $this->sessions = factory('App\Models\Session', 5)->create();
-    }
+        $users = factory('App\Models\User')->create();
+        $response = $this->get('attendees');
+        $response->assertSee($users->name);
                                 </code></pre>
                             </span>
                         </li>
@@ -67,44 +63,12 @@
                         </li>
                         <li class="pb-8 mb-8">
                             <span class="code-block">
-                                <pre><code>
-$factory->define(App\Models\Session::class, function (Faker $faker) {
-    return [
-        'title' => $faker->sentence,
-        'speaker' => $faker->name,
-        'time' => $faker->time,
-    ];
-});
-                                </code></pre>
+                                <pre><code>Route::get('attendees', 'AttendeesController@index');</code></pre>
                             </span>
                         </li>
                         <li class="pb-8 mb-8">
                             <span class="code-block">
-                                <pre><code>
-            $table->string('title');
-            $table->string('speaker');
-            $table->time('time');
-                                </code></pre>
-                            </span>
-                        </li>
-                        <li class="pb-8 mb-8">
-                            <span class="code-block">
-                                <pre><code>$ php artisan migrate</code></pre>
-                            </span>
-                        </li>
-                        <li class="pb-8 mb-8">
-                            <span class="code-block">
-                                <pre><code>        $response->assertStatus(200);</code></pre>
-                            </span>
-                        </li>
-                        <li class="pb-8 mb-8">
-                            <span class="code-block">
-                                <pre><code>Route::get('schedule', 'SessionsController@index');</code></pre>
-                            </span>
-                        </li>
-                        <li class="pb-8 mb-8">
-                            <span class="code-block">
-                                <pre><code>php artisan make:controller SessionsController</code></pre>
+                                <pre><code>$ php artisan make:controller AttendeesController</code></pre>
                             </span>
                         </li>
                         <li class="pb-8 mb-8">
@@ -112,9 +76,9 @@ $factory->define(App\Models\Session::class, function (Faker $faker) {
                                 <pre><code>
     public function index()
     {
-        $sessions = Session::all();
+        $users = User::whoBoughtTicket()->get(); // wishful thinking
 
-        return view('schedule', compact("sessions"));
+        return view('attendees', compact("users"));
     }
                                 </code></pre>
                             </span>
@@ -122,13 +86,39 @@ $factory->define(App\Models\Session::class, function (Faker $faker) {
                         <li class="pb-8 mb-8">
                             <span class="code-block">
                                 <pre><code>@verbatim
-@if (Auth::check())
-&#x3C;span class=&#x22;text-grey pr-4 invisible&#x22;&#x3E;{{ $session-&#x3E;time }}&#x3C;/span&#x3E;
-&#x3C;a href=&#x22;#&#x22; class=&#x22;text-right no-underline text-blue-light text-base&#x22;&#x3E;
-    {{ $session-&#x3E;speaker }}
-&#x3C;/a&#x3E;
-@endif
-@endverbatim</code></pre>
+&#x3C;div&#x3E;
+    &#x3C;h1 class=&#x22;text-grey-darker text-center font-hairline tracking-wide text-7xl mb-6&#x22;&#x3E;
+        Attendees
+    &#x3C;/h1&#x3E;
+
+    &#x3C;div class=&#x22;text-center pt-8&#x22;&#x3E;
+        &#x3C;ul class=&#x22;list-reset text-2xl text-blue mt-8 pt-8&#x22;&#x3E;
+            @foreach($users as $user)
+            &#x3C;li class=&#x22;p-4 bg-white my-4 shadow rounded&#x22;&#x3E;
+                &#x3C;h4&#x3E;
+                    &#x3C;a href=&#x22;#&#x22; class=&#x22;no-underline text-blue-light&#x22;&#x3E;
+                        {{ $user-&#x3E;name }}
+                    &#x3C;/a&#x3E;
+                &#x3C;/h4&#x3E;
+                &#x3C;span class=&#x22;text-grey text-base pr-4&#x22;&#x3E;{{ $user-&#x3E;email }}&#x3C;/span&#x3E;
+            &#x3C;/li&#x3E;
+            @endforeach
+        &#x3C;/ul&#x3E;
+    &#x3C;/div&#x3E;
+&#x3C;/div&#x3E;
+                                @endverbatim</code></pre>
+                            </span>
+                        </li>
+                        <li class="pb-8 mb-8">
+                            <span class="code-block">
+                                <pre><code>
+$table->dateTime('ticket_bought')->nullable(); // timestamp instead of boolean
+                                </code></pre>
+                            </span>
+                        </li>
+                        <li class="pb-8 mb-8">
+                            <span class="code-block">
+                                <pre><code>        'ticket_bought' => \Carbon\Carbon::now(),</code></pre>
                             </span>
                         </li>
                     @include('page.pagination')

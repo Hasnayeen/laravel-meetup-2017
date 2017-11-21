@@ -7,13 +7,13 @@
                     </h1>
                     <ul class="list-reset text-2xl text-blue mt-8 pt-8">
                         <li class="pb-8">
-                            1. Create a new test <span class="var">visitors_can_see_register_button</span>
+                            1. Create a new test <span class="var">logged_in_users_can_see_purchase_ticket_button</span>
                         </li>
                         <li class="pb-8 mb-8">
                             <span class="code-block">
                                 <pre><code>
     /** @test */
-    public function visitors_can_see_register_button()
+    public function logged_in_user_can_see_purchase_ticket_button()
     {
 
     }
@@ -27,11 +27,11 @@
                             <span class="code-block">
                                 <pre>
                                     <code>
-// Given we are not logged in
+// Given we are logged in
 
 // When we visit the base url a.k.a home page
 
-// Then we should see the register button
+// Then we should see the purchase ticket button
 </code>
                                 </pre>
                             </span>
@@ -42,8 +42,10 @@
                         <li class="pb-8 mb-8">
                             <span class="code-block">
                                 <pre><code>
-        $response = $this->get('/');
-        $response->assertSee('Register');
+        $user = factory('App\Models\User')->create();
+        $response = $this->actingAs($user)
+                         ->get('/');
+        $response->assertSee('Purchase Ticket');
                                 </code></pre>
                             </span>
                         </li>
@@ -52,13 +54,17 @@
                         </li>
                         <li class="pb-8">
                             <span class="code-block">
-                                <pre><code>
-&#x3C;div class=&#x22;text-center pt-8&#x22;&#x3E;
-    &#x3C;a href=&#x22;register&#x22; class=&#x22;bg-brand hover:bg-brand-dark text-white text-xl font-semibold no-underline py-2 px-4 rounded mr-3&#x22;&#x3E;
-        Register
-    &#x3C;/a&#x3E;
-&#x3C;/div&#x3E;
-                                </code></pre>
+                                <pre><code>@verbatim
+@if (Auth::check())
+&#x3C;a href=&#x22;tickets&#x22; class=&#x22;bg-brand hover:bg-brand-dark text-white text-xl font-semibold no-underline py-2 px-4 rounded mr-3&#x22;&#x3E;
+    Purchase Ticket
+&#x3C;/a&#x3E;
+@else
+&#x3C;a href=&#x22;register&#x22; class=&#x22;bg-brand hover:bg-brand-dark text-white text-xl font-semibold no-underline py-2 px-4 rounded mr-3&#x22;&#x3E;
+    Register
+&#x3C;/a&#x3E;
+@endif
+@endverbatim                                </code></pre>
                             </span>
                         </li>
                     @include('page.pagination')
