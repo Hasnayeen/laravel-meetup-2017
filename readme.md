@@ -2,7 +2,7 @@
 
 ## Write Your Application Story
 
-This repo contains a laravel application with slides and code for my "Laravel Meetup 1.0" presentation. This present shows a basic TDD approach for beginners.
+This repo contains a laravel application with slides and code for my "Laravel Meetup 1.0" presentation. This presentation shows a basic TDD approach for beginners.
 
 ## How to use
 
